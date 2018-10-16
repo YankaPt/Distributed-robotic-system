@@ -3,14 +3,15 @@ package model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CoordinateCenter {
+public class CoordinateCenter extends Robot {
     private Set<Robot> robots;
-    private String id;
     private SurfaceModel surfaceModel;
+    private static final int INITIAL_SURFACE_MODEL_SIZE = 10;
 
     public CoordinateCenter() {
         robots = new HashSet<>();
-        surfaceModel = new SurfaceModel(10);
+        surfaceModel = new SurfaceModel(INITIAL_SURFACE_MODEL_SIZE);
+        System.out.print(id);
     }
 
     public void createNewSurfaceModel(int size) {
@@ -39,5 +40,15 @@ public class CoordinateCenter {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    void move(Direction direction) {
+
+    }
+
+    @Override
+    void interact() {
+
     }
 }
