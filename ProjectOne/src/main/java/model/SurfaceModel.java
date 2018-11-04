@@ -3,8 +3,7 @@ package model;
 import java.awt.*;
 import java.util.Arrays;
 
-public class SurfaceModel {
-    private LandscapeType[][] surface;
+public class SurfaceModel extends Surface{
     private Point center;
 
     public SurfaceModel(int size) {
@@ -15,7 +14,7 @@ public class SurfaceModel {
         surface[center.y][center.x] = LandscapeType.FREE;
     }
 
-    public LandscapeType[][] getSurface() {
+    public LandscapeType[][] getSurfaceModel() {
         return surface;
     }
 

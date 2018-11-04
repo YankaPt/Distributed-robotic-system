@@ -3,6 +3,7 @@ package model;
 import java.util.Objects;
 
 public abstract class Robot {
+    World world;
     String id;
 
     public Robot() {
@@ -12,6 +13,10 @@ public abstract class Robot {
     abstract void move(Direction direction);
 
     abstract void interact();
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
 
     @Override
     public boolean equals(Object o) {

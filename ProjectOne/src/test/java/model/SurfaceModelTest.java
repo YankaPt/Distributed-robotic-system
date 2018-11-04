@@ -18,6 +18,6 @@ public class SurfaceModelTest {
         }
         sampleModel[SAMPLE_SIZE/2][SAMPLE_SIZE/2] = LandscapeType.FREE;
         surfaceModel = new SurfaceModel(SAMPLE_SIZE);
-        assertArrayEquals(sampleModel, surfaceModel.getSurface());
+        assertArrayEquals(sampleModel, surfaceModel.getSurfaceModel());
     }
 }
