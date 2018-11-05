@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.*;
+
 public class RobotPrototype extends Robot {
     private Hub hub;
 
@@ -13,6 +15,7 @@ public class RobotPrototype extends Robot {
 
     @Override
     void interact() {
+        //interact
     }
 
     public Hub getHub() {
@@ -28,4 +31,8 @@ public class RobotPrototype extends Robot {
         hub.improveSurfaceModel(this, direction, landscapeType);
     }
 
+    public void moveToTarget() {
+        Point targetLocation = world.getRelativeTargetLocation(hub);
+        //TODO: moveToTarget
+    }
 }

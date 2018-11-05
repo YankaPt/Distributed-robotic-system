@@ -3,6 +3,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.LandscapeType;
+import model.World;
 
 public class ProjectOne extends Application {
 
@@ -12,6 +14,7 @@ public class ProjectOne extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
+        World world = new World("surface.txt");
     }
 
 
