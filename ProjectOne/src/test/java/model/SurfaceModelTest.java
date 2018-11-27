@@ -1,5 +1,7 @@
 package model;
 
+import model.world.LandscapeType;
+import model.world.SurfaceModel;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,4 +1,11 @@
-package model;
+package model.robot;
+
+import model.world.Direction;
+import model.world.LandscapeType;
+import model.world.SurfaceModel;
+import strategies.CustomStrategy;
+import strategies.RunIntoAndTurnStrategy;
+import strategies.Strategy;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -7,12 +14,11 @@ import java.util.Map;
 public class Hub extends Robot {
     Map<Robot, Point> robotsAndRelativeLocations;
     private SurfaceModel surfaceModel;
-    private static final int INITIAL_SURFACE_MODEL_SIZE = 10;
+    private static final int INITIAL_SURFACE_MODEL_SIZE = 11;
 
     public Hub() {
         robotsAndRelativeLocations = new HashMap<>();
         surfaceModel = new SurfaceModel(INITIAL_SURFACE_MODEL_SIZE);
-        System.out.print(id);
     }
 
     public void createNewSurfaceModel(int size) {
@@ -27,9 +33,18 @@ public class Hub extends Robot {
         this.surfaceModel = surfaceModel;
     }
 
+    public void runStrategies() throws InterruptedException{
+        Strategy strategy = new CustomStrategy(this);
+        if (world.getFlatness() >= 0.75) {
+            strategy = new RunIntoAndTurnStrategy(this);
+        }
+        strategy.runStrategy();
+    }
+
     public void addRobot(Robot robot) {
         addRobot(robot, new Point(0,0));
     }
+
     public void addRobot(Robot robot, Point point) {
         robotsAndRelativeLocations.put(robot, point);
         if (robot instanceof RobotPrototype) {
@@ -56,63 +71,77 @@ public class Hub extends Robot {
         Point center = surfaceModel.getCenter();
         switch (direction) {
             case LEFT: {
-                surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x - 1][center.y + robotRelativeLocation.y] = landscapeType;
+                surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y][center.x + robotRelativeLocation.x - 1] = landscapeType;
+                break;
             }
             case RIGHT: {
-                surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x + 1][center.y + robotRelativeLocation.y] = landscapeType;
+                surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y][center.x + robotRelativeLocation.x + 1] = landscapeType;
+                break;
             }
             case FORWARD: {
-                surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x][center.y + robotRelativeLocation.y - 1] = landscapeType;
+                surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y - 1][center.x + robotRelativeLocation.x] = landscapeType;
+                break;
             }
             case BACKWARD: {
-                surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x][center.y + robotRelativeLocation.y + 1] = landscapeType;
+                surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y + 1][center.x + robotRelativeLocation.x] = landscapeType;
+                break;
             }
         }
+        world.showHubMap(this);
     }
 
-    public boolean verifyDirectionAndMove(Robot robot, Direction direction) {
+    public boolean verifyDirectionAndCommitMove(Robot robot, Direction direction) {
         Point robotRelativeLocation = robotsAndRelativeLocations.get(robot);
         Point center = surfaceModel.getCenter();
         switch (direction) {
             case LEFT: {
-                if (surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x - 1][center.y + robotRelativeLocation.y].equals(LandscapeType.FREE)) {
+                if (surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y][center.x + robotRelativeLocation.x - 1].equals(LandscapeType.FREE)) {
                     robotRelativeLocation.translate(-1,0);
+                    world.updateRobotLocation(robot, this);
                     return true;
                 }
+                break;
             }
             case RIGHT: {
-                if (surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x + 1][center.y + robotRelativeLocation.y].equals(LandscapeType.FREE)) {
+                if (surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y][center.x + robotRelativeLocation.x + 1].equals(LandscapeType.FREE)) {
                     robotRelativeLocation.translate(1, 0);
+                    world.updateRobotLocation(robot, this);
                     return true;
                 }
+                break;
             }
             case FORWARD: {
-                if (surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x][center.y + robotRelativeLocation.y - 1].equals(LandscapeType.FREE)) {
+                if (surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y - 1][center.x + robotRelativeLocation.x].equals(LandscapeType.FREE)) {
                     robotRelativeLocation.translate(0, -1);
+                    world.updateRobotLocation(robot, this);
                     return true;
                 }
+                break;
             }
             case BACKWARD: {
-                if (surfaceModel.getSurfaceModel()[center.x + robotRelativeLocation.x][center.y + robotRelativeLocation.y + 1].equals(LandscapeType.FREE)) {
+                if (surfaceModel.getSurfaceModel()[center.y + robotRelativeLocation.y + 1][center.x + robotRelativeLocation.x].equals(LandscapeType.FREE)) {
                     robotRelativeLocation.translate(0, 1);
+                    world.updateRobotLocation(robot, this);
                     return true;
                 }
+                break;
             }
         }
         return false;
     }
 
-    public String getId() {
-        return id;
-    }
-
     @Override
-    void move(Direction direction) {
+    public void move(Direction direction) {
         throw new UnsupportedOperationException("Hub can't move yet");
     }
 
     @Override
-    void interact() {
+    public boolean interact() {
         throw new UnsupportedOperationException("Hub can't interact with anything yet");
+    }
+
+    @Override
+    public void run() {
+
     }
 }

@@ -1,4 +1,8 @@
-package model;
+package model.world;
+
+import model.robot.Hub;
+import model.robot.Robot;
+import model.robot.RobotPrototype;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -7,13 +11,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class World {
-    private  Surface surface;
+    private Surface surface;
     private Point targetLocation;
-    private Map<Robot, Point> robotsAndLocations;
+    private Map<model.robot.Robot, Point> robotsAndLocations;
     private Set<Hub> hubs;
+    private Double flatness;
 
     public World(String file) throws IOException {
         this.surface = readSurface(file);
+        calculateFlatness();
         robotsAndLocations = new HashMap<>();
         hubs = new HashSet<>();
     }
@@ -28,8 +34,19 @@ public class World {
                 surface.surface[i][j] = LandscapeType.valueOf(elements[j]);
             }
         }
-
         return surface;
+    }
+
+    private void calculateFlatness() {
+        double totalFlatness = 0;
+        for (LandscapeType[] landscapeTypes : surface.surface) {
+            for (LandscapeType landscapeType : landscapeTypes) {
+                if (landscapeType.equals(LandscapeType.FREE)) {
+                    totalFlatness++;
+                }
+            }
+        }
+        flatness = totalFlatness / (surface.getSize() * surface.getSize());
     }
 
     public void setTarget(Point target) {
@@ -40,7 +57,7 @@ public class World {
         return targetLocation;
     }
 
-    public Point getRelativeTargetLocation(Hub hub) {
+    public Point getRelativeTargetLocationFor(Hub hub) {
         Point hubLocation = robotsAndLocations.get(hub);
         return new Point(targetLocation.x - hubLocation.x, targetLocation.y - hubLocation.y);
     }
@@ -56,7 +73,7 @@ public class World {
         });
     }
 
-    public void deleteRobot(Robot robot) {
+    public void deleteRobot(model.robot.Robot robot) {
         if (robot instanceof RobotPrototype) {
             ((RobotPrototype) robot).getHub().removeRobot(robot);
         } else {
@@ -65,23 +82,51 @@ public class World {
         robotsAndLocations.remove(robot);
     }
 
-    public LandscapeType checkCell(Robot robot, Direction direction) {
+    public void updateRobotLocation(model.robot.Robot robot, Hub hub) {
+        Point hubLocation = robotsAndLocations.get(hub);
+        Point updatedLocation = new Point(hub.getRelativeLocationFor(robot));
+        updatedLocation.translate(hubLocation.x, hubLocation.y);
+        robotsAndLocations.get(robot).setLocation(updatedLocation);
+    }
+
+    public LandscapeType checkCell(model.robot.Robot robot, Direction direction) {
         Point location = robotsAndLocations.get(robot);
         switch (direction) {
             case LEFT: {
-                return surface.surface[location.x - 1][location.y];
+                return surface.surface[location.y][location.x - 1];
             }
             case RIGHT: {
-                return surface.surface[location.x + 1][location.y];
+                return surface.surface[location.y][location.x + 1];
             }
             case FORWARD: {
-                return surface.surface[location.x][location.y - 1];
+                return surface.surface[location.y - 1][location.x];
             }
             case BACKWARD: {
-                return surface.surface[location.x][location.y + 1];
+                return surface.surface[location.y + 1][location.x];
             } default: {
                 return null;
             }
         }
+    }
+
+    public Map<Robot, Point> getRobotsAndLocations() {
+        return robotsAndLocations;
+    }
+
+    public void showHubMap(Hub hub) {
+        LandscapeType[][] hubMap = hub.getSurfaceModel().getSurfaceModel();
+        for (LandscapeType[] landscapeTypes : hubMap) {
+            for (LandscapeType landscapeType: landscapeTypes) {
+                System.out.print(landscapeType + " ");
+            }
+            System.out.println("\n");
+        }
+    }
+    public Surface getSurface() {
+        return surface;
+    }
+
+    public Double getFlatness() {
+        return flatness;
     }
 }

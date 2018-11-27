@@ -1,4 +1,4 @@
-package model;
+package model.world;
 
 public class Surface {
     LandscapeType[][] surface;

@@ -1,4 +1,4 @@
-package model;
+package model.world;
 
 import java.awt.*;
 import java.util.Arrays;

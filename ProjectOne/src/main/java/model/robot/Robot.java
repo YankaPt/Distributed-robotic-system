@@ -1,21 +1,28 @@
-package model;
+package model.robot;
+
+import model.world.Direction;
+import model.world.World;
 
 import java.util.Objects;
 
-public abstract class Robot {
-    World world;
-    String id;
+public abstract class Robot implements Runnable{
+    protected World world;
+    private String id;
 
     public Robot() {
         id = IDGenerator.generateID() + "";
     }
 
-    abstract void move(Direction direction);
+    abstract public void move(Direction direction);
 
-    abstract void interact();
+    abstract public boolean interact();
 
     public void setWorld(World world) {
         this.world = world;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     @Override
