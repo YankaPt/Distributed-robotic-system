@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Hub extends Robot {
-    Map<Robot, Point> robotsAndRelativeLocations;
+    private Map<Robot, Point> robotsAndRelativeLocations;
     private SurfaceModel surfaceModel;
     private static final int INITIAL_SURFACE_MODEL_SIZE = 11;
 
@@ -35,7 +35,7 @@ public class Hub extends Robot {
 
     public void runStrategies() throws InterruptedException{
         Strategy strategy = new CustomStrategy(this);
-        if (world.getFlatness() >= 0.75) {
+        if (world.getFlatness() >= 0.5) {
             strategy = new RunIntoAndTurnStrategy(this);
         }
         strategy.runStrategy();

@@ -31,21 +31,21 @@ public class RunIntoAndTurnStrategy implements SimpleStrategy {
     }
 
     private Direction chooseDirectionFor(Robot robot) {
+        double p = Math.random();
         Point robotLocation = hub.getRelativeLocationFor(robot);
         Point targetLocation = robot.getWorld().getRelativeTargetLocationFor(hub);
         int dx = targetLocation.x - robotLocation.x;
         int dy = targetLocation.y - robotLocation.y;
         if (Math.abs(dx) >= Math.abs(dy)) {
             if (dx >= 0) {
-                return robot.getWorld().checkCell(robot, Direction.RIGHT).equals(LandscapeType.FREE) ? Direction.RIGHT : Direction.FORWARD;
+                return robot.getWorld().checkCell(robot, Direction.RIGHT).equals(LandscapeType.FREE) ? Direction.RIGHT : p>0.5 ? Direction.FORWARD : Direction.BACKWARD;
             } else {
-                return robot.getWorld().checkCell(robot, Direction.LEFT).equals(LandscapeType.FREE) ? Direction.LEFT : Direction.FORWARD;
+                return robot.getWorld().checkCell(robot, Direction.LEFT).equals(LandscapeType.FREE) ? Direction.LEFT : p>0.5 ? Direction.FORWARD : Direction.BACKWARD;
             }
         } else if (dy >= 0) {
-            return robot.getWorld().checkCell(robot, Direction.BACKWARD).equals(LandscapeType.FREE) ? Direction.BACKWARD : Direction.RIGHT;
+            return robot.getWorld().checkCell(robot, Direction.BACKWARD).equals(LandscapeType.FREE) ? Direction.BACKWARD : p>0.5 ? Direction.RIGHT : Direction.LEFT;
         } else {
-            return robot.getWorld().checkCell(robot, Direction.FORWARD).equals(LandscapeType.FREE) ? Direction.FORWARD : Direction.RIGHT;
+            return robot.getWorld().checkCell(robot, Direction.FORWARD).equals(LandscapeType.FREE) ? Direction.FORWARD : p>0.5 ? Direction.RIGHT : Direction.LEFT;
         }
-        //return Direction.BACKWARD;
     }
 }
