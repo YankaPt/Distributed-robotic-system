@@ -47,13 +47,13 @@ public class ProjectOne extends Application {
             for (int j = 0; j < world.getSurface().getSize(); j++) {
                 Button button = new Button();
                 switch (world.getSurface().getSurface()[i][j]) {
-                    case UNKNOWN:
+                    case UNKN:
                         button.setStyle("-fx-background-color: rgba(74,71,92,0.49); ");
                         break;
                     case FREE:
                         button.setStyle("-fx-background-color: #ffffff; ");
                         break;
-                    case OBSTRUCTION:
+                    case OBST:
                         button.setStyle("-fx-background-color: #000000; ");
                         break;
                 }

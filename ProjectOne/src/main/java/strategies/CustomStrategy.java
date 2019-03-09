@@ -18,7 +18,7 @@ public class CustomStrategy implements SimpleStrategy {
     }
 
     @Override
-    public synchronized void runStrategy() throws  InterruptedException{
+    public synchronized boolean runStrategy() throws  InterruptedException{
         RobotPrototype prototype = (RobotPrototype) hub.getRobots().keySet().stream().findFirst().get();
         for (Direction direction : directionList) {
             while (!prototype.isFree()) {
@@ -28,6 +28,8 @@ public class CustomStrategy implements SimpleStrategy {
         }
         if (prototype.interact()) {
             System.out.println("Target is reached");
+            return true;
         }
+        return false;
     }
 }

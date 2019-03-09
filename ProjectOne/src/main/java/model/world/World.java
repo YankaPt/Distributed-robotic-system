@@ -37,7 +37,7 @@ public class World {
         return surface;
     }
 
-    private void calculateFlatness() {
+    public void calculateFlatness() {
         double totalFlatness = 0;
         for (LandscapeType[] landscapeTypes : surface.surface) {
             for (LandscapeType landscapeType : landscapeTypes) {
@@ -114,19 +114,63 @@ public class World {
     }
 
     public void showHubMap(Hub hub) {
+        System.out.println("______________________________________________________");
         LandscapeType[][] hubMap = hub.getSurfaceModel().getSurfaceModel();
+        Point hubLocation = robotsAndLocations.get(hub);
+        Robot robot = hub.getRobots().keySet().stream().findFirst().get();
+        int i = 0;
         for (LandscapeType[] landscapeTypes : hubMap) {
+            int j = 0;
             for (LandscapeType landscapeType: landscapeTypes) {
-                System.out.print(landscapeType + " ");
+                if (hub.getSurfaceModel().getCenter().x + hub.getRelativeLocationFor(robot).x == j && hub.getSurfaceModel().getCenter().y + hub.getRelativeLocationFor(robot).y == i) {
+                    System.out.print("R ");
+                    j++;
+                    continue;
+                }
+                if (hub.getSurfaceModel().getCenter().x == j && hub.getSurfaceModel().getCenter().y == i) {
+                    System.out.print("H ");
+                    j++;
+                    continue;
+                }
+                if (hub.getSurfaceModel().getCenter().x + getRelativeTargetLocationFor(hub).x == j && hub.getSurfaceModel().getCenter().y + getRelativeTargetLocationFor(hub).y == i) {
+                    System.out.print("T ");
+                    j++;
+                    continue;
+                }
+                switch (landscapeType) {
+                    case OBST: {
+                        System.out.print("X ");
+                        break;
+                    }
+                    case UNKN: {
+                        System.out.print("? ");
+                        break;
+                    }
+                    case FREE: {
+                        System.out.print("+ ");
+                        break;
+                    }
+                }
+                j++;
             }
-            System.out.println("\n");
+            System.out.print("\n");
+            i++;
         }
     }
     public Surface getSurface() {
         return surface;
     }
 
+    public void setSurface(Surface surface) {
+        this.surface = surface;
+    }
+
     public Double getFlatness() {
         return flatness;
+    }
+
+    public void clear() {
+        robotsAndLocations.clear();
+        hubs.clear();
     }
 }

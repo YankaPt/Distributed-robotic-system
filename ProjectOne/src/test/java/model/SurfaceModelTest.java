@@ -15,7 +15,7 @@ public class SurfaceModelTest {
         LandscapeType[][] sampleModel = new LandscapeType[SAMPLE_SIZE][SAMPLE_SIZE];
         for (int i = 0; i < SAMPLE_SIZE; i++) {
             for (int j = 0; j < SAMPLE_SIZE; j++) {
-                sampleModel[i][j] = LandscapeType.UNKNOWN;
+                sampleModel[i][j] = LandscapeType.UNKN;
             }
         }
         sampleModel[SAMPLE_SIZE/2][SAMPLE_SIZE/2] = LandscapeType.FREE;

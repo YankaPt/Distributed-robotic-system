@@ -1,5 +1,5 @@
 package strategies;
 
 public interface Strategy {
-    void runStrategy() throws  InterruptedException;
+    boolean runStrategy() throws  InterruptedException;
 }

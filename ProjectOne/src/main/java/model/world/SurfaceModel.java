@@ -9,7 +9,7 @@ public class SurfaceModel extends Surface{
     public SurfaceModel(int size) {
         surface = new LandscapeType[size][size];
         Arrays.stream(surface)
-                .forEach((c) -> Arrays.fill(c, LandscapeType.UNKNOWN));
+                .forEach((c) -> Arrays.fill(c, LandscapeType.UNKN));
         center = new Point(size/2, size/2);
         surface[center.y][center.x] = LandscapeType.FREE;
     }

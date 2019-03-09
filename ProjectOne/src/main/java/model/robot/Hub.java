@@ -33,12 +33,12 @@ public class Hub extends Robot {
         this.surfaceModel = surfaceModel;
     }
 
-    public void runStrategies() throws InterruptedException{
-        Strategy strategy = new CustomStrategy(this);
-        if (world.getFlatness() >= 0.5) {
+    public boolean runStrategies() throws InterruptedException{
+        Strategy strategy = new RunIntoAndTurnStrategy(this);
+    /*    if (world.getFlatness() >= 0.5) {
             strategy = new RunIntoAndTurnStrategy(this);
-        }
-        strategy.runStrategy();
+        }*/
+        return strategy.runStrategy();
     }
 
     public void addRobot(Robot robot) {
