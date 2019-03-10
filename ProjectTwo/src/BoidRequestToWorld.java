@@ -7,4 +7,12 @@ public class BoidRequestToWorld extends BoidRequest {
         this.typeOfBoidRequestToWorld = typeOfBoidRequestToWorld;
         this.direction = direction;
     }
+
+    public TypesOfBoidRequestToWorld getTypeOfBoidRequestToWorld() {
+        return typeOfBoidRequestToWorld;
+    }
+
+    public Directions getDirection() {
+        return direction;
+    }
 }
