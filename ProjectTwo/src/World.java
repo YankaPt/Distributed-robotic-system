@@ -6,6 +6,7 @@ public class World {
     private static final String MOVEMENT_FAIL_BY_OBSTACLE = "movement failed by obstacle";
     private static final String MOVEMENT_FAIL_BY_NOT_ENOUGH_ENERGY = "not enough energy of movement on difficult terrain";
     private static final String MOVEMENT_FAIL_WITH_DAMAGE = "TODO";
+    private static final int DEFAULT_BOID_SEMISIZE = 2;
     private SurfaceModel surfaceModel;
     private Map<Boid, Point> boid2locationMap = new HashMap<>();
     private Queue<BoidRequestToWorld> requestsToWorld = new ArrayDeque<>();
@@ -45,7 +46,7 @@ public class World {
         switch (direction) {
             case UP: {
                 for (int i = boidLocation.x - semiSize + 1; i <= boidLocation.x + semiSize - 1; i++) {
-                    if (surfaceModel.surface[boidLocation.y - 1][i].getSurfaceObject() != null) {
+                    if (surfaceModel.surface[boidLocation.y - semiSize][i].getSurfaceObject() != null) {
                         return MOVEMENT_FAIL_BY_OBSTACLE;
                     }
                     difficultOfMove += surfaceModel.surface[boidLocation.y - 1][i].getDifficultOfTerrain();
@@ -55,11 +56,15 @@ public class World {
                 }
                 boid.setEnergyOfMovement((int) Math.round(boid.getEnergyOfMovement() - difficultOfMove));
                 boidLocation.y--;
+                for (int i = boidLocation.x - semiSize + 1; i <= boidLocation.x + semiSize - 1; i++) {
+                    surfaceModel.surface[boidLocation.y + semiSize][i].setSurfaceObject(null);
+                    surfaceModel.surface[boidLocation.y - semiSize + 1][i].setSurfaceObject(new SurfaceObject("B"));
+                }
                 return SUCCESSFUL_MOVEMENT;
             }
             case DOWN: {
                 for (int i = boidLocation.x - semiSize + 1; i <= boidLocation.x + semiSize - 1; i++) {
-                    if (surfaceModel.surface[boidLocation.y + 1][i].getSurfaceObject() != null) {
+                    if (surfaceModel.surface[boidLocation.y + semiSize][i].getSurfaceObject() != null) {
                         return MOVEMENT_FAIL_BY_OBSTACLE;
                     }
                     difficultOfMove += surfaceModel.surface[boidLocation.y + 1][i].getDifficultOfTerrain();
@@ -69,11 +74,15 @@ public class World {
                 }
                 boid.setEnergyOfMovement((int) Math.round(boid.getEnergyOfMovement() - difficultOfMove));
                 boidLocation.y++;
+                for (int i = boidLocation.x - semiSize + 1; i <= boidLocation.x + semiSize - 1; i++) {
+                    surfaceModel.surface[boidLocation.y - semiSize][i].setSurfaceObject(null);
+                    surfaceModel.surface[boidLocation.y + semiSize - 1][i].setSurfaceObject(new SurfaceObject("B"));
+                }
                 return SUCCESSFUL_MOVEMENT;
             }
             case LEFT: {
                 for (int i = boidLocation.y - semiSize + 1; i <= boidLocation.y + semiSize - 1; i++) {
-                    if (surfaceModel.surface[i][boidLocation.x - 1].getSurfaceObject() != null) {
+                    if (surfaceModel.surface[i][boidLocation.x - semiSize].getSurfaceObject() != null) {
                         return MOVEMENT_FAIL_BY_OBSTACLE;
                     }
                     difficultOfMove += surfaceModel.surface[i][boidLocation.x - 1].getDifficultOfTerrain();
@@ -83,11 +92,15 @@ public class World {
                 }
                 boid.setEnergyOfMovement((int) Math.round(boid.getEnergyOfMovement() - difficultOfMove));
                 boidLocation.x--;
+                for (int i = boidLocation.y - semiSize + 1; i <= boidLocation.y + semiSize - 1; i++) {
+                    surfaceModel.surface[i][boidLocation.x + semiSize].setSurfaceObject(null);
+                    surfaceModel.surface[i][boidLocation.x - semiSize + 1].setSurfaceObject(new SurfaceObject("B"));
+                }
                 return SUCCESSFUL_MOVEMENT;
             }
             case RIGHT: {
                 for (int i = boidLocation.y - semiSize + 1; i <= boidLocation.y + semiSize - 1; i++) {
-                    if (surfaceModel.surface[i][boidLocation.x + 1].getSurfaceObject() != null) {
+                    if (surfaceModel.surface[i][boidLocation.x + semiSize].getSurfaceObject() != null) {
                         return MOVEMENT_FAIL_BY_OBSTACLE;
                     }
                     difficultOfMove += surfaceModel.surface[i][boidLocation.x + 1].getDifficultOfTerrain();
@@ -97,6 +110,10 @@ public class World {
                 }
                 boid.setEnergyOfMovement((int) Math.round(boid.getEnergyOfMovement() - difficultOfMove));
                 boidLocation.x++;
+                for (int i = boidLocation.y - semiSize + 1; i <= boidLocation.y + semiSize - 1; i++) {
+                    surfaceModel.surface[i][boidLocation.x - semiSize].setSurfaceObject(null);
+                    surfaceModel.surface[i][boidLocation.x + semiSize -1].setSurfaceObject(new SurfaceObject("B"));
+                }
                 return SUCCESSFUL_MOVEMENT;
             }
         }
@@ -127,12 +144,24 @@ public class World {
     }
 
     public Boid createBoidAndGet(Point location) {
-        if (location.x <0 || location.y <0) {
+        if (location.x < 0 || location.y < 0) {
             throw new ArithmeticException("wrong bound of location");
+        }
+        for (int i = location.y - DEFAULT_BOID_SEMISIZE + 1; i <= location.y + DEFAULT_BOID_SEMISIZE - 1; i++) {
+            for (int j = location.x - DEFAULT_BOID_SEMISIZE + 1; j <= location.x + DEFAULT_BOID_SEMISIZE - 1; j++) {
+                if (surfaceModel.surface[i][j].getSurfaceObject() != null) {
+                    throw new RuntimeException("unclear terrain");
+                }
+            }
         }
         Boid newBoid = new Boid(this);
         newBoid.setActive(true);
         boid2locationMap.put(newBoid, location);
+        for (int i = location.y - DEFAULT_BOID_SEMISIZE + 1; i <= location.y + DEFAULT_BOID_SEMISIZE - 1; i++) {
+            for (int j = location.x - DEFAULT_BOID_SEMISIZE + 1; j <= location.x + DEFAULT_BOID_SEMISIZE - 1; j++) {
+                surfaceModel.surface[i][j].setSurfaceObject(new SurfaceObject("B"));
+            }
+        }
         return newBoid;
     }
 

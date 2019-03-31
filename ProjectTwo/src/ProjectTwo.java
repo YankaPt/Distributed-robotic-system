@@ -5,11 +5,24 @@ public class ProjectTwo {
     public static void main(String... args) throws InterruptedException {
         ProjectTwo projectTwo = new ProjectTwo();
         int counter;
-        SurfaceModel surfaceModel = SurfaceGenerator.generateEmptySurface(7);
+        SurfaceModel surfaceModel = SurfaceGenerator.generateEmptySurface(18);
         World world = new World(surfaceModel);
-        Boid firstBoid = world.createBoidAndGet(new Point(3,4));
+        Boid firstBoid = world.createBoidAndGet(new Point(5,5));
+        Boid secondBoid = world.createBoidAndGet(new Point(9, 8));
         projectTwo.showMap(world);
-        firstBoid.move(Directions.UP);
+        firstBoid.move(Directions.DOWN);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.DOWN);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.RIGHT);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.DOWN);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.DOWN);
         world.nextMove();
         projectTwo.showMap(world);
     }
@@ -57,13 +70,14 @@ public class ProjectTwo {
             //TODO replace this
             String view=difficultOfTerrain.toString() + " ";
             if (surfaceObject != null) {
-                view = view + surfaceObject.toString() + " ";
-            }
-            if (boid != null) {
-                view = view + "B  ";
+                view = view + surfaceObject.toString() + "   ";
                 return view;
             }
-            return view + "   ";
+            /*if (boid != null) {
+                view = view + "B   ";
+                return view;
+            }*/
+            return view + "    ";
         }
     }
 }
