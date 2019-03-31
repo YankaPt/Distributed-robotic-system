@@ -1,25 +1,25 @@
 public class SurfaceCell {
-    private double passability;
+    private double difficultOfTerrain;
     SurfaceObject surfaceObject;
 
     public SurfaceCell() {
     }
 
-    public SurfaceCell(double passability) {
-        this.passability = passability;
+    public SurfaceCell(double difficultOfTerrain) {
+        this.difficultOfTerrain = difficultOfTerrain;
     }
 
-    public SurfaceCell(double passability, SurfaceObject surfaceObject) {
-        this.passability = passability;
+    public SurfaceCell(double difficultOfTerrain, SurfaceObject surfaceObject) {
+        this.difficultOfTerrain = difficultOfTerrain;
         this.surfaceObject = surfaceObject;
     }
 
-    public double getPassability() {
-        return passability;
+    public double getDifficultOfTerrain() {
+        return difficultOfTerrain;
     }
 
-    public void setPassability(double passability) {
-        this.passability = passability;
+    public void setDifficultOfTerrain(double difficultOfTerrain) {
+        this.difficultOfTerrain = difficultOfTerrain;
     }
 
     public SurfaceObject getSurfaceObject() {

@@ -4,4 +4,8 @@ public abstract class BoidRequest {
     public BoidRequest(Boid source) {
         this.source = source;
     }
+
+    public Boid getSource() {
+        return source;
+    }
 }
