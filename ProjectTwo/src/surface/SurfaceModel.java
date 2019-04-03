@@ -1,5 +1,7 @@
+package surface;
+
 public class SurfaceModel {
-    SurfaceCell[][] surface;
+    public SurfaceCell[][] surface;
 
     public SurfaceModel(SurfaceCell[][] surface) {
         this.surface = surface;

@@ -1,3 +1,12 @@
+import boids.Boid;
+import boids.Task;
+import surface.SurfaceCell;
+import surface.SurfaceGenerator;
+import surface.SurfaceModel;
+import surface.SurfaceObject;
+import world.Directions;
+import world.World;
+
 import java.awt.*;
 import java.util.Map;
 
@@ -5,18 +14,36 @@ public class ProjectTwo {
     public static void main(String... args) throws InterruptedException {
         ProjectTwo projectTwo = new ProjectTwo();
         int counter;
-        SurfaceModel surfaceModel = SurfaceGenerator.generateEmptySurface(18);
+        SurfaceModel surfaceModel = SurfaceGenerator.generateEmptySurface(20);
+        surfaceModel.surface[1][1].setSurfaceObject(new SurfaceObject("R"));
+        surfaceModel.surface[18][18].setSurfaceObject(new SurfaceObject("R"));
         World world = new World(surfaceModel);
         Boid firstBoid = world.createBoidAndGet(new Point(5,5));
-        Boid secondBoid = world.createBoidAndGet(new Point(9, 8));
+        Boid secondBoid = world.createBoidAndGet(new Point(10, 8));
+        firstBoid.setCurrentTask(new Task("Gather", new Point(1, 1),10));
+        secondBoid.setCurrentTask(new Task("Gather", new Point(18,18),1));
+        System.out.println(secondBoid.getCurrentTask().getTarget());
+        firstBoid.askForHelp();
+        //world.nextMove();
+        System.out.println(secondBoid.getCurrentTask().getTarget());
         projectTwo.showMap(world);
         firstBoid.move(Directions.DOWN);
+        secondBoid.move(Directions.DOWN);
         world.nextMove();
         projectTwo.showMap(world);
         firstBoid.move(Directions.DOWN);
+        secondBoid.move(Directions.LEFT);
         world.nextMove();
         projectTwo.showMap(world);
         firstBoid.move(Directions.RIGHT);
+        secondBoid.move(Directions.DOWN);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.DOWN);
+        secondBoid.move(Directions.DOWN);
+        world.nextMove();
+        projectTwo.showMap(world);
+        firstBoid.move(Directions.DOWN);
         world.nextMove();
         projectTwo.showMap(world);
         firstBoid.move(Directions.DOWN);

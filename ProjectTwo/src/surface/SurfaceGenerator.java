@@ -1,3 +1,5 @@
+package surface;
+
 public class SurfaceGenerator {
 
     public static SurfaceModel generateEmptySurface(int size) {

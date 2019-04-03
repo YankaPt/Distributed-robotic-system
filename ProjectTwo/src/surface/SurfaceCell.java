@@ -1,3 +1,5 @@
+package surface;
+
 public class SurfaceCell {
     private double difficultOfTerrain;
     SurfaceObject surfaceObject;

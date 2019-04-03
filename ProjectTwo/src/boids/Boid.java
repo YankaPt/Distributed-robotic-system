@@ -1,3 +1,14 @@
+package boids;
+
+import boidrequests.BoidCommunicationRequest;
+import boidrequests.BoidRequestToWorld;
+import boidrequests.TypesOfBoidRequestToWorld;
+import surface.SurfaceCell;
+import surface.SurfaceModel;
+import surface.SurfaceObject;
+import world.Directions;
+import world.World;
+
 import java.awt.*;
 
 public class Boid {
@@ -13,12 +24,12 @@ public class Boid {
     private SurfaceModel internalMap;
     private Point place;
     private Integer capacity = 1;
+    private Task currentTask;
 
     public Boid(World world) {
         this.world = world;
         //this.internalMap = generateEmptyMap();
         this.internalMap = world.getSurfaceModel(); //for simplicity
-        this.place = world.getBoid2locationMap().get(this);
     }
 
     private SurfaceModel generateEmptyMap() {
@@ -52,32 +63,46 @@ public class Boid {
         }
     }
 
+    public void askForHelp() {
+        BoidCommunicationRequest communicationRequest = new BoidCommunicationRequest(this);
+        communicationRequest.setType("Help");
+        communicationRequest.setPriority(1);
+        communicationRequest.setTarget(currentTask.getTarget());
+        world.getCommunicationRequests().add(communicationRequest);
+    }
+
     public void runSimpleStrategy() {
         lookAround();
         Point target = getTarget();
+        /*while (Math.abs(target.x - this.place.x) > semiSize && Math.abs(target.y - this.place.y) > semiSize) {
 
+        }*/
     }
 
-    private Point getTarget() {
+    public Point getTarget() {
         Point optimalTarget = null;
         //TODO: find optimal, not last
-        for (int k = 1; k < internalMap.surface.length; k++) {
-            for (int i = place.y - k; i <= place.y + k; i++) {
-                if ("Resource".equals(internalMap.surface[i][place.x - k].getSurfaceObject().getType())) {
-                    optimalTarget = new Point(place.x - k, i);
-                } else if ("Resource".equals(internalMap.surface[i][place.x + k].getSurfaceObject().getType())) {
-                    optimalTarget = new Point(place.x + k, i);
+        try {
+            for (int k = 1; k < internalMap.surface.length; k++) {
+                for (int i = place.y - k; i <= place.y + k; i++) {
+                    if ("R".equals(internalMap.surface[i][place.x - k].getSurfaceObject().getType())) {
+                        optimalTarget = new Point(place.x - k, i);
+                    } else if ("R".equals(internalMap.surface[i][place.x + k].getSurfaceObject().getType())) {
+                        optimalTarget = new Point(place.x + k, i);
+                    }
+                }
+                for (int j = place.x - k; j <= place.x + k; j++) {
+                    if ("R".equals(internalMap.surface[place.y - k][j].getSurfaceObject().getType())) {
+                        optimalTarget = new Point(j, place.y - k);
+                    } else if ("R".equals(internalMap.surface[place.y + k][j].getSurfaceObject().getType())) {
+                        optimalTarget = new Point(j, place.y + k);
+                    }
                 }
             }
-            for (int j = place.x - k; j <= place.x + k; j++) {
-                if ("Resource".equals(internalMap.surface[place.y - k][j].getSurfaceObject().getType())) {
-                    optimalTarget = new Point(j, place.y - k);
-                } else if ("Resource".equals(internalMap.surface[place.y + k][j].getSurfaceObject().getType())) {
-                    optimalTarget = new Point(j, place.y + k);
-                }
-            }
+            return optimalTarget;
+        } catch (NullPointerException ex) {
+            return optimalTarget;
         }
-        return optimalTarget;
     }
 
     public Long getId() {
@@ -138,5 +163,21 @@ public class Boid {
 
     public void setEnergyOfMovement(Integer energyOfMovement) {
         this.energyOfMovement = energyOfMovement;
+    }
+
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(Task currentTask) {
+        this.currentTask = currentTask;
+    }
+
+    public Point getPlace() {
+        return place;
+    }
+
+    public void setPlace(Point place) {
+        this.place = place;
     }
 }

@@ -1,3 +1,7 @@
+package boidrequests;
+
+import boids.Boid;
+
 public abstract class BoidRequest {
     private Boid source;
 

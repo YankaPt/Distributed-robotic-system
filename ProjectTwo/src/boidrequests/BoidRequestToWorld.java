@@ -1,3 +1,8 @@
+package boidrequests;
+
+import boids.Boid;
+import world.Directions;
+
 public class BoidRequestToWorld extends BoidRequest {
     private TypesOfBoidRequestToWorld typeOfBoidRequestToWorld;
     private Directions direction;

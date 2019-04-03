@@ -1,3 +1,13 @@
+package world;
+
+import boidrequests.TypesOfBoidRequestToWorld;
+import boids.Boid;
+import boids.Task;
+import surface.SurfaceModel;
+import surface.SurfaceObject;
+import boidrequests.BoidCommunicationRequest;
+import boidrequests.BoidRequestToWorld;
+
 import java.awt.*;
 import java.util.*;
 
@@ -123,6 +133,14 @@ public class World {
     private void processCommunicationRequests() {
         while (!communicationRequests.isEmpty()) {
             BoidCommunicationRequest boidRequest = communicationRequests.poll();
+            Task newTask = new Task(boidRequest.getType(), boidRequest.getTarget(), boidRequest.getPriority());
+            boid2locationMap.forEach((boid, point) -> {
+                Task currentTask = boid.getCurrentTask();
+                double distance = Math.sqrt(Math.pow(boid.getPlace().x-currentTask.getTarget().x,2) + Math.pow(boid.getPlace().y-currentTask.getTarget().y,2));
+                if ((distance-3.0)/currentTask.getPriority()<=10) {
+                    boid.setCurrentTask(newTask);
+                }
+            });
             //TODO implement this branch
         }
     }
@@ -157,6 +175,7 @@ public class World {
         Boid newBoid = new Boid(this);
         newBoid.setActive(true);
         boid2locationMap.put(newBoid, location);
+        newBoid.setPlace(boid2locationMap.get(newBoid));
         for (int i = location.y - DEFAULT_BOID_SEMISIZE + 1; i <= location.y + DEFAULT_BOID_SEMISIZE - 1; i++) {
             for (int j = location.x - DEFAULT_BOID_SEMISIZE + 1; j <= location.x + DEFAULT_BOID_SEMISIZE - 1; j++) {
                 surfaceModel.surface[i][j].setSurfaceObject(new SurfaceObject("B"));
